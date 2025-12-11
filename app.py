@@ -5,13 +5,13 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. ADVANCED CSS (ORIGINAL NEON THEME) ---
+# --- 2. ADVANCED CSS (VISIBILITY FIXED) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
-    /* BACKGROUND (Dark Cyber Look) */
+    /* BACKGROUND */
     .stApp {
         background: radial-gradient(circle at 50% 10%, #002B5B 0%, #021a35 40%, #000000 100%);
         color: white;
@@ -57,40 +57,50 @@ st.markdown("""
         .logo-sub { text-align: center; font-size: 10px; }
     }
 
-    /* --- UPLOAD BOX FIX (WHITE TEXT VISIBILITY) --- */
+    /* --- UPLOAD BOX VISIBILITY FIX (NUCLEAR OPTION) --- */
     
-    /* Box Background Darker */
-    section[data-testid="stFileUploaderDropzone"] {
-        background-color: rgba(20, 20, 20, 0.9) !important;
+    /* 1. Main Dropzone Area - Darker Background */
+    [data-testid="stFileUploaderDropzone"] {
+        background-color: rgba(0, 0, 0, 0.8) !important;
         border: 2px dashed #00c6ff;
         border-radius: 15px;
         padding: 30px; 
     }
 
-    /* Force "Drag and drop file here" and other text to be PURE WHITE */
-    section[data-testid="stFileUploaderDropzone"] div,
-    section[data-testid="stFileUploaderDropzone"] span,
-    section[data-testid="stFileUploaderDropzone"] small,
-    section[data-testid="stFileUploaderDropzone"] label {
-        color: #FFFFFF !important;
-        font-family: 'Roboto', sans-serif !important; /* Simple Font inside box for readability */
-        font-weight: 500 !important;
-    }
-    
-    /* Make the Button text inside uploader visible */
-    section[data-testid="stFileUploaderDropzone"] button {
-        color: #FFFFFF !important;
-        border-color: #00c6ff !important;
+    /* 2. INSTRUCTIONS TEXT (Drag and drop file here) */
+    [data-testid="stFileUploaderDropzoneInstructions"] > div:first-child {
+        color: #FFFFFF !important; /* Pure White */
+        font-size: 18px !important;
+        font-weight: bold !important;
+        font-family: 'Roboto', sans-serif;
     }
 
-    /* Hover Effect */
-    section[data-testid="stFileUploaderDropzone"]:hover {
-        border-color: #00ff88;
-        background-color: black !important;
+    /* 3. SMALL TEXT (Limit 200MB) */
+    [data-testid="stFileUploaderDropzoneInstructions"] > div:nth-child(2) small {
+        color: #CCCCCC !important; /* Light Grey */
+        font-size: 12px !important;
     }
 
+    /* 4. THE BROWSE FILES BUTTON (CRITICAL FIX) */
+    [data-testid="stFileUploaderDropzone"] button {
+        background-color: rgba(255, 255, 255, 0.1) !important; /* Slight White BG */
+        border: 1px solid #00c6ff !important; /* Cyan Border */
+        color: #FFFFFF !important; /* White Text */
+        font-weight: 700 !important;
+        padding: 10px 20px !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+    }
 
-    /* TEXT INSTRUCTION */
+    /* 5. Button Hover Effect */
+    [data-testid="stFileUploaderDropzone"] button:hover {
+        background-color: #00c6ff !important; /* Cyan BG */
+        color: #000000 !important; /* Black Text */
+        border-color: #00ff88 !important;
+        box-shadow: 0 0 15px rgba(0, 198, 255, 0.6) !important;
+    }
+
+    /* TEXT INSTRUCTION ABOVE BOX */
     .instruction-text {
         text-align: center;
         font-size: 20px;
@@ -102,7 +112,7 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
     }
 
-    /* MAIN BUTTONS */
+    /* MAIN ACTION BUTTONS */
     .stButton>button {
         width: 100%;
         font-family: 'Orbitron', sans-serif;
@@ -166,11 +176,11 @@ uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     
-    # Preview
+    # PREVIEW
     if not st.session_state.scanned:
         st.image(image, caption="Uploaded File (Ready to Scan)", use_column_width=True)
 
-    # Scan Button
+    # ACTION BUTTON
     if st.button("ACTIVATE SCAN"):
         with st.spinner("⚡ PROCESSING DATA MATRIX..."):
             results = classifier(image)
@@ -180,7 +190,7 @@ if uploaded_file is not None:
                     nsfw_score = item['score']
                     break
             
-            # Logic
+            # STRICT LOGIC
             if nsfw_score > 0.2:
                 st.session_state.status = "UNSAFE"
                 st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
@@ -202,7 +212,7 @@ if st.session_state.scanned:
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
     
-    # Reset
+    # RESET
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
