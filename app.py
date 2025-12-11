@@ -168,7 +168,7 @@ if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = str(0)
 
 # Instruction
-st.markdown('<p class="instruction-text">✨ Check if your Image is Safe or Not ✨</p>', unsafe_allow_html=True)
+st.markdown('<p class="instruction-text"> Check if your Image is Safe or Not </p>', unsafe_allow_html=True)
 
 # UPLOAD BOX
 uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session_state.uploader_key)
