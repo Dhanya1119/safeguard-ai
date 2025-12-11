@@ -5,7 +5,7 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. ADVANCED CSS (VISIBILITY FIXED) ---
+# --- 2. ADVANCED CSS (FINAL GREEN GLOW EDIT) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
@@ -57,19 +57,20 @@ st.markdown("""
         .logo-sub { text-align: center; font-size: 10px; }
     }
 
-    /* --- UPLOAD BOX VISIBILITY FIX (NUCLEAR OPTION) --- */
+    /* --- UPLOAD BOX FINAL FIX (GREEN GLOW + WHITE TEXT) --- */
     
-    /* 1. Main Dropzone Area - Darker Background */
+    /* 1. Main Dropzone Area - Darker BG + GREEN GLOW BORDER */
     [data-testid="stFileUploaderDropzone"] {
         background-color: rgba(0, 0, 0, 0.8) !important;
-        border: 2px dashed #00c6ff;
+        border: 2px dashed #00ff88 !important; /* NEON GREEN BORDER */
         border-radius: 15px;
-        padding: 30px; 
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); /* GREEN GLOW EFFECT */
     }
 
-    /* 2. INSTRUCTIONS TEXT (Drag and drop file here) */
+    /* 2. INSTRUCTIONS TEXT (Drag and drop file here) - PURE WHITE */
     [data-testid="stFileUploaderDropzoneInstructions"] > div:first-child {
-        color: #FFFFFF !important; /* Pure White */
+        color: #FFFFFF !important;
         font-size: 18px !important;
         font-weight: bold !important;
         font-family: 'Roboto', sans-serif;
@@ -77,14 +78,14 @@ st.markdown("""
 
     /* 3. SMALL TEXT (Limit 200MB) */
     [data-testid="stFileUploaderDropzoneInstructions"] > div:nth-child(2) small {
-        color: #CCCCCC !important; /* Light Grey */
+        color: #DDDDDD !important; /* Off White */
         font-size: 12px !important;
     }
 
-    /* 4. THE BROWSE FILES BUTTON (CRITICAL FIX) */
+    /* 4. THE BROWSE FILES BUTTON */
     [data-testid="stFileUploaderDropzone"] button {
-        background-color: rgba(255, 255, 255, 0.1) !important; /* Slight White BG */
-        border: 1px solid #00c6ff !important; /* Cyan Border */
+        background-color: rgba(0, 255, 136, 0.1) !important; /* Slight Green Tint */
+        border: 1px solid #00ff88 !important; /* Green Border */
         color: #FFFFFF !important; /* White Text */
         font-weight: 700 !important;
         padding: 10px 20px !important;
@@ -94,10 +95,9 @@ st.markdown("""
 
     /* 5. Button Hover Effect */
     [data-testid="stFileUploaderDropzone"] button:hover {
-        background-color: #00c6ff !important; /* Cyan BG */
+        background-color: #00ff88 !important; /* Full Green */
         color: #000000 !important; /* Black Text */
-        border-color: #00ff88 !important;
-        box-shadow: 0 0 15px rgba(0, 198, 255, 0.6) !important;
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.8) !important;
     }
 
     /* TEXT INSTRUCTION ABOVE BOX */
@@ -157,7 +157,7 @@ def load_classifier():
 with st.spinner("🔄 SYSTEM INITIALIZING..."):
     classifier = load_classifier()
 
-# --- 5. LOGIC ---
+# --- 5. LOGIC & DISPLAY ---
 if 'scanned' not in st.session_state:
     st.session_state.scanned = False
 if 'final_img' not in st.session_state:
@@ -207,7 +207,6 @@ if st.session_state.scanned:
     if st.session_state.status == "UNSAFE":
         st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
-        
     elif st.session_state.status == "SAFE":
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
