@@ -5,19 +5,20 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. ADVANCED CSS ---
+# --- 2. ADVANCED MOBILE RESPONSIVE CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
+    /* BACKGROUND */
     .stApp {
         background: radial-gradient(circle at 50% 10%, #002B5B 0%, #021a35 40%, #000000 100%);
         color: white;
         font-family: 'Roboto', sans-serif;
     }
 
-    /* HEADER & LOGO */
+    /* --- PC / LAPTOP STYLES (Default) --- */
     .logo-box {
         display: flex;
         align-items: center;
@@ -30,39 +31,81 @@ st.markdown("""
         box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
         backdrop-filter: blur(5px);
     }
-    .shield-icon { font-size: 60px; margin-right: 15px; text-shadow: 0 0 20px #00ff88; }
+    
+    .shield-icon {
+        font-size: 60px;
+        margin-right: 15px;
+        text-shadow: 0 0 20px #00ff88;
+    }
+    
     .logo-text {
         font-family: 'Orbitron', sans-serif;
         font-weight: 900;
-        font-size: 45px;
+        font-size: 45px; /* Default Size for PC */
         text-transform: uppercase;
         background: linear-gradient(to right, #00c6ff, #0072ff, #00ff88);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.5));
     }
+    
+    .logo-sub {
+        font-size: 12px;
+        color: #aaa;
+        letter-spacing: 2px;
+        font-family: 'Orbitron';
+    }
 
-    /* NEW TEXT HIGHLIGHT (INSTRUCTION) */
+    /* --- MOBILE STYLES (Screen chinnaga unte idi apply avuthundi) --- */
+    @media only screen and (max-width: 600px) {
+        .logo-box {
+            flex-direction: column; /* Stack vertically on phone */
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .shield-icon {
+            font-size: 40px; /* Reduce Icon Size */
+            margin-right: 0;
+            margin-bottom: 5px;
+        }
+        .logo-text {
+            font-size: 28px !important; /* Reduce Text Size significantly */
+            text-align: center;
+        }
+        .logo-sub {
+            text-align: center;
+            font-size: 10px;
+        }
+    }
+
+    /* TEXT HIGHLIGHT (Visible on both) */
     .instruction-text {
         text-align: center;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
-        color: #00FFFF; /* Bright Cyan Neon */
+        color: #00FFFF !important; /* Force Bright Cyan */
         margin-top: 10px;
         margin-bottom: 10px;
         letter-spacing: 1px;
-        text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.6);
         font-family: 'Orbitron', sans-serif;
     }
 
-    /* UPLOAD BOX */
+    /* UPLOAD BOX FIX (To make text visible) */
     div[data-testid="stFileUploader"] {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(0, 0, 0, 0.3); /* Darker transparent background */
         border: 2px dashed #00c6ff;
         border-radius: 15px;
         padding: 20px;
         text-align: center;
     }
+    
+    /* Ensuring inner text is WHITE */
+    div[data-testid="stFileUploader"] label, 
+    div[data-testid="stFileUploader"] span, 
+    div[data-testid="stFileUploader"] div {
+        color: white !important; /* Force text color to white */
+    }
+
     div[data-testid="stFileUploader"]:hover {
         background-color: rgba(0, 198, 255, 0.1);
         border-color: #00ff88;
@@ -88,7 +131,7 @@ st.markdown("""
         color: white;
     }
 
-    /* STATUS CARDS */
+    /* RESULTS */
     .status-safe {
         border: 2px solid #00ff88;
         background: rgba(0, 255, 136, 0.1);
@@ -114,13 +157,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER ---
+# --- 3. HEADER (Responsive HTML) ---
 st.markdown("""
     <div class="logo-box">
         <span class="shield-icon">🛡️</span>
-        <div style="display:flex; flex-direction:column; text-align:left;">
+        <div style="display:flex; flex-direction:column;">
             <span class="logo-text">SAFEGUARD AI</span>
-            <span style="font-size:12px; color:#aaa; letter-spacing:2px; font-family:'Orbitron';">INTELLIGENT PROTECTION PROTOCOL</span>
+            <span class="logo-sub">INTELLIGENT PROTECTION PROTOCOL</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -134,8 +177,6 @@ with st.spinner("🔄 SYSTEM INITIALIZING..."):
     classifier = load_classifier()
 
 # --- 5. LOGIC & DISPLAY ---
-
-# State Init
 if 'scanned' not in st.session_state:
     st.session_state.scanned = False
 if 'final_img' not in st.session_state:
@@ -146,7 +187,7 @@ if 'status' not in st.session_state:
 if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = str(0)
 
-# --- ADDED TEXT HERE (Highlighted) ---
+# Text Instruction
 st.markdown('<p class="instruction-text">✨ Check if your Image is Safe or Not ✨</p>', unsafe_allow_html=True)
 
 # UPLOAD BOX
