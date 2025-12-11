@@ -5,7 +5,7 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. ADVANCED CSS (VISIBILITY FIXED) ---
+# --- 2. ADVANCED CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
@@ -18,7 +18,7 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
 
-    /* --- PC STYLES --- */
+    /* HEADER & LOGO */
     .logo-box {
         display: flex;
         align-items: center;
@@ -31,13 +31,7 @@ st.markdown("""
         box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
         backdrop-filter: blur(5px);
     }
-    
-    .shield-icon {
-        font-size: 60px;
-        margin-right: 15px;
-        text-shadow: 0 0 20px #00ff88;
-    }
-    
+    .shield-icon { font-size: 60px; margin-right: 15px; text-shadow: 0 0 20px #00ff88; }
     .logo-text {
         font-family: 'Orbitron', sans-serif;
         font-weight: 900;
@@ -48,7 +42,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.5));
     }
-    
     .logo-sub {
         font-size: 12px;
         color: #aaa;
@@ -56,7 +49,7 @@ st.markdown("""
         font-family: 'Orbitron';
     }
 
-    /* --- MOBILE RESPONSIVENESS FIX --- */
+    /* MOBILE RESPONSIVE */
     @media only screen and (max-width: 600px) {
         .logo-box { flex-direction: column; padding: 15px; }
         .shield-icon { font-size: 40px; margin-right: 0; margin-bottom: 5px; }
@@ -64,35 +57,34 @@ st.markdown("""
         .logo-sub { text-align: center; font-size: 10px; }
     }
 
-    /* --- UPLOAD BOX VISIBILITY FIX (CRITICAL) --- */
+    /* --- UPLOAD BOX FIX (DRAG & DROP TEXT VISIBILITY) --- */
     
-    /* 1. Make the Dropzone Darker so text pops */
-    div[data-testid="stFileUploader"] {
-        background-color: rgba(0, 0, 0, 0.4) !important; /* Semi-transparent Black */
+    /* Target the Main Dropzone Area */
+    section[data-testid="stFileUploaderDropzone"] {
+        background-color: rgba(0, 0, 0, 0.6) !important; /* Dark Background */
         border: 2px dashed #00c6ff;
         border-radius: 15px;
-        padding: 30px;
-        text-align: center;
-    }
-    
-    /* 2. Force ALL text inside Uploader to be BRIGHT CYAN/WHITE */
-    div[data-testid="stFileUploader"] label,
-    div[data-testid="stFileUploader"] span,
-    div[data-testid="stFileUploader"] small,
-    div[data-testid="stFileUploader"] button {
-        color: #E0F7FA !important; /* Very bright cyan-white */
-        font-weight: bold !important;
+        padding: 30px; 
     }
 
-    /* 3. Style the Browse Button specifically */
+    /* FORCE ALL TEXT INSIDE UPLOADER TO BE WHITE */
+    section[data-testid="stFileUploaderDropzone"] * {
+        color: #FFFFFF !important; /* Force Pure White Text */
+        font-weight: 500;
+        font-family: 'Orbitron', sans-serif; /* Stylized text */
+    }
+
+    /* Style the 'Browse files' button specifically */
     section[data-testid="stFileUploaderDropzone"] button {
         background-color: rgba(0, 198, 255, 0.2);
         border: 1px solid #00c6ff;
-        color: white !important;
+        color: #E0F7FA !important;
+        padding: 5px 15px;
+        border-radius: 5px;
     }
 
-    div[data-testid="stFileUploader"]:hover {
-        background-color: rgba(0, 0, 0, 0.6) !important;
+    section[data-testid="stFileUploaderDropzone"]:hover {
+        background-color: rgba(0, 0, 0, 0.8) !important;
         border-color: #00ff88;
     }
 
@@ -105,6 +97,7 @@ st.markdown("""
         margin-top: 10px;
         margin-bottom: 10px;
         font-family: 'Orbitron', sans-serif;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
     }
 
     /* MAIN BUTTONS */
@@ -128,8 +121,8 @@ st.markdown("""
     }
 
     /* STATUS CARDS */
-    .status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron', font-size: 22px; }
-    .status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron', font-size: 22px; }
+    .status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
+    .status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -162,7 +155,7 @@ if 'status' not in st.session_state:
 if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = str(0)
 
-# Instruction Text
+# Instruction
 st.markdown('<p class="instruction-text">✨ Check if your Image is Safe or Not ✨</p>', unsafe_allow_html=True)
 
 # UPLOAD BOX
@@ -171,9 +164,11 @@ uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     
+    # PREVIEW
     if not st.session_state.scanned:
         st.image(image, caption="Uploaded File (Ready to Scan)", use_column_width=True)
 
+    # SCAN BUTTON
     if st.button("ACTIVATE SCAN"):
         with st.spinner("⚡ PROCESSING DATA MATRIX..."):
             results = classifier(image)
@@ -183,6 +178,7 @@ if uploaded_file is not None:
                     nsfw_score = item['score']
                     break
             
+            # LOGIC
             if nsfw_score > 0.2:
                 st.session_state.status = "UNSAFE"
                 st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
@@ -195,6 +191,7 @@ if uploaded_file is not None:
 
 # --- 6. RESULT ---
 if st.session_state.scanned:
+    
     if st.session_state.status == "UNSAFE":
         st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
@@ -202,6 +199,7 @@ if st.session_state.scanned:
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
     
+    # RESET
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
