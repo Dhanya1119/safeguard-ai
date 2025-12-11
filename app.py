@@ -5,18 +5,17 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. SIMPLE & CLEAN CSS ---
+# --- 2. ADVANCED CSS (ORIGINAL NEON THEME) ---
 st.markdown("""
     <style>
-    /* IMPORT FONTS: Aleo (for Headers) & Lato (for Body) - Simple & Clean */
-    @import url('https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&family=Lato:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
-    /* BACKGROUND */
+    /* BACKGROUND (Dark Cyber Look) */
     .stApp {
-        background: radial-gradient(circle at 50% 10%, #1a2a6c 0%, #b21f1f 100%, #fdbb2d 100%); /* Just kidding, sticking to Deep Blue/Black for contrast */
         background: radial-gradient(circle at 50% 10%, #002B5B 0%, #021a35 40%, #000000 100%);
         color: white;
-        font-family: 'Lato', sans-serif; /* Body Text */
+        font-family: 'Roboto', sans-serif;
     }
 
     /* HEADER & LOGO */
@@ -25,109 +24,107 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         margin-bottom: 20px;
-        background: rgba(255, 255, 255, 0.05);
+        background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 198, 255, 0.1));
         padding: 20px;
-        border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
         backdrop-filter: blur(5px);
     }
-    
-    .shield-icon { font-size: 50px; margin-right: 15px; }
-    
+    .shield-icon { font-size: 60px; margin-right: 15px; text-shadow: 0 0 20px #00ff88; }
     .logo-text {
-        font-family: 'Aleo', serif; /* Requested Font Style */
-        font-weight: 700;
-        font-size: 40px;
-        letter-spacing: 1px;
-        color: white;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        font-size: 45px;
         text-transform: uppercase;
+        background: linear-gradient(to right, #00c6ff, #0072ff, #00ff88);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.5));
     }
-    
     .logo-sub {
-        font-size: 14px;
-        color: #ddd;
-        font-family: 'Lato', sans-serif;
-        letter-spacing: 1px;
+        font-size: 12px;
+        color: #aaa;
+        letter-spacing: 2px;
+        font-family: 'Orbitron';
     }
 
-    /* --- UPLOAD BOX VISIBILITY FIX (WHITE TEXT) --- */
+    /* MOBILE RESPONSIVE */
+    @media only screen and (max-width: 600px) {
+        .logo-box { flex-direction: column; padding: 15px; }
+        .shield-icon { font-size: 40px; margin-right: 0; margin-bottom: 5px; }
+        .logo-text { font-size: 28px !important; text-align: center; }
+        .logo-sub { text-align: center; font-size: 10px; }
+    }
+
+    /* --- UPLOAD BOX FIX (WHITE TEXT VISIBILITY) --- */
     
+    /* Box Background Darker */
     section[data-testid="stFileUploaderDropzone"] {
-        background-color: rgba(0, 0, 0, 0.5) !important;
-        border: 2px dashed #a0a0a0;
-        border-radius: 10px;
-        padding: 40px 20px;
+        background-color: rgba(20, 20, 20, 0.9) !important;
+        border: 2px dashed #00c6ff;
+        border-radius: 15px;
+        padding: 30px; 
     }
 
-    /* FORCE TEXT TO BE WHITE & SIMPLE */
-    section[data-testid="stFileUploaderDropzone"] * {
-        color: #FFFFFF !important; /* PURE WHITE */
-        font-family: 'Aleo', serif !important;
-        font-weight: 400 !important;
-        font-size: 16px !important;
+    /* Force "Drag and drop file here" and other text to be PURE WHITE */
+    section[data-testid="stFileUploaderDropzone"] div,
+    section[data-testid="stFileUploaderDropzone"] span,
+    section[data-testid="stFileUploaderDropzone"] small,
+    section[data-testid="stFileUploaderDropzone"] label {
+        color: #FFFFFF !important;
+        font-family: 'Roboto', sans-serif !important; /* Simple Font inside box for readability */
+        font-weight: 500 !important;
     }
-
-    /* Browse Button Style */
+    
+    /* Make the Button text inside uploader visible */
     section[data-testid="stFileUploaderDropzone"] button {
-        background-color: transparent;
-        border: 1px solid white;
-        color: white !important;
-        border-radius: 5px;
+        color: #FFFFFF !important;
+        border-color: #00c6ff !important;
     }
 
     /* Hover Effect */
     section[data-testid="stFileUploaderDropzone"]:hover {
-        background-color: rgba(0, 0, 0, 0.7) !important;
-        border-color: white;
+        border-color: #00ff88;
+        background-color: black !important;
     }
 
-    /* INSTRUCTION TEXT */
+
+    /* TEXT INSTRUCTION */
     .instruction-text {
         text-align: center;
-        font-size: 18px;
-        font-family: 'Aleo', serif;
-        color: #E0E0E0;
-        margin-top: 15px;
-        margin-bottom: 5px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #00FFFF !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
     }
 
-    /* BUTTONS */
+    /* MAIN BUTTONS */
     .stButton>button {
         width: 100%;
-        font-family: 'Aleo', serif;
-        background: white;
+        font-family: 'Orbitron', sans-serif;
+        background: linear-gradient(90deg, #00c6ff, #00ff88);
         border: none;
-        color: #002B5B;
-        font-weight: 700;
-        font-size: 18px;
-        padding: 12px;
-        border-radius: 5px;
+        color: #002333;
+        font-weight: 900;
+        font-size: 20px;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         transition: 0.3s;
     }
     .stButton>button:hover {
-        background: #f0f0f0;
-        transform: scale(1.01);
+        transform: scale(1.02);
+        box-shadow: 0 0 40px rgba(0, 198, 255, 0.8);
+        color: white;
     }
 
     /* STATUS CARDS */
-    .status-safe { 
-        border-left: 5px solid #00ff88; 
-        background: rgba(0, 255, 136, 0.1); 
-        color: white; 
-        padding: 15px; 
-        border-radius: 5px; 
-        text-align: left; 
-        font-family: 'Aleo', serif; 
-    }
-    .status-unsafe { 
-        border-left: 5px solid #ff4b4b; 
-        background: rgba(255, 75, 75, 0.1); 
-        color: white; 
-        padding: 15px; 
-        border-radius: 5px; 
-        text-align: left; 
-        font-family: 'Aleo', serif; 
-    }
+    .status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
+    .status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -136,8 +133,8 @@ st.markdown("""
     <div class="logo-box">
         <span class="shield-icon">🛡️</span>
         <div style="display:flex; flex-direction:column;">
-            <span class="logo-text">SafeGuard AI</span>
-            <span class="logo-sub">Intelligent Content Protection</span>
+            <span class="logo-text">SAFEGUARD AI</span>
+            <span class="logo-sub">INTELLIGENT PROTECTION PROTOCOL</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -147,7 +144,7 @@ st.markdown("""
 def load_classifier():
     return pipeline("image-classification", model="AdamCodd/vit-base-nsfw-detector")
 
-with st.spinner("Wait... System is getting ready"):
+with st.spinner("🔄 SYSTEM INITIALIZING..."):
     classifier = load_classifier()
 
 # --- 5. LOGIC ---
@@ -161,7 +158,7 @@ if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = str(0)
 
 # Instruction
-st.markdown('<p class="instruction-text">Check if your Image is Safe or Not</p>', unsafe_allow_html=True)
+st.markdown('<p class="instruction-text">✨ Check if your Image is Safe or Not ✨</p>', unsafe_allow_html=True)
 
 # UPLOAD BOX
 uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session_state.uploader_key)
@@ -169,11 +166,13 @@ uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     
+    # Preview
     if not st.session_state.scanned:
-        st.image(image, caption="Uploaded File", use_column_width=True)
+        st.image(image, caption="Uploaded File (Ready to Scan)", use_column_width=True)
 
-    if st.button("RUN SCAN"):
-        with st.spinner("Processing..."):
+    # Scan Button
+    if st.button("ACTIVATE SCAN"):
+        with st.spinner("⚡ PROCESSING DATA MATRIX..."):
             results = classifier(image)
             nsfw_score = 0.0
             for item in results:
@@ -181,7 +180,7 @@ if uploaded_file is not None:
                     nsfw_score = item['score']
                     break
             
-            # STRICT LOGIC
+            # Logic
             if nsfw_score > 0.2:
                 st.session_state.status = "UNSAFE"
                 st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
@@ -196,23 +195,14 @@ if uploaded_file is not None:
 if st.session_state.scanned:
     
     if st.session_state.status == "UNSAFE":
-        st.markdown("""
-        <div class="status-unsafe">
-            <h3>🚫 BLOCKED</h3>
-            <p>Strict Mode: Content hidden for safety.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        st.image(st.session_state.final_img, caption="Blurred View", use_column_width=True)
+        st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
+        st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
         
     elif st.session_state.status == "SAFE":
-        st.markdown("""
-        <div class="status-safe">
-            <h3>✅ SAFE</h3>
-            <p>Content is verified and clean.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        st.image(st.session_state.final_img, caption="Original View", use_column_width=True)
+        st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
+        st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
     
+    # Reset
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
