@@ -25,4 +25,4 @@ This web app is a **Proof of Concept (PoC)**.
 The final goal is to build an **Android System-Level Service** that runs in the background and blocks explicit content across ALL apps (Instagram, Chrome, Twitter, etc.) in real-time.
 
 ---
-*Built by Dhanya (1st Year CSE) for Scaler School of Technology Hackathon.*
+*Built by Dhanyavalli Koppu (1st Year CSE) for Scaler School of Technology Hackathon.*
