@@ -57,35 +57,42 @@ st.markdown("""
         .logo-sub { text-align: center; font-size: 10px; }
     }
 
-    /* --- UPLOAD BOX FIX (DRAG & DROP TEXT VISIBILITY) --- */
+    /* --- UPLOAD BOX VISIBILITY FIX (NEON GREEN HIGHLIGHT) --- */
     
-    /* Target the Main Dropzone Area */
     section[data-testid="stFileUploaderDropzone"] {
-        background-color: rgba(0, 0, 0, 0.6) !important; /* Dark Background */
-        border: 2px dashed #00c6ff;
+        background-color: rgba(0, 0, 0, 0.8) !important; /* Very Dark Background for contrast */
+        border: 2px dashed #00FF88; /* Green Border */
         border-radius: 15px;
-        padding: 30px; 
+        padding: 40px 20px; /* More padding */
     }
 
-    /* FORCE ALL TEXT INSIDE UPLOADER TO BE WHITE */
+    /* FORCE ALL TEXT INSIDE UPLOADER TO BE NEON GREEN */
     section[data-testid="stFileUploaderDropzone"] * {
-        color: #FFFFFF !important; /* Force Pure White Text */
-        font-weight: 500;
-        font-family: 'Orbitron', sans-serif; /* Stylized text */
+        color: #00FF88 !important; /* NEON GREEN COLOR */
+        font-weight: 900 !important; /* Extra Bold */
+        font-family: 'Orbitron', sans-serif;
+        font-size: 16px !important;
+        letter-spacing: 1px;
     }
 
-    /* Style the 'Browse files' button specifically */
+    /* 'Browse Files' Button */
     section[data-testid="stFileUploaderDropzone"] button {
-        background-color: rgba(0, 198, 255, 0.2);
-        border: 1px solid #00c6ff;
-        color: #E0F7FA !important;
-        padding: 5px 15px;
-        border-radius: 5px;
+        border: 2px solid #00FF88;
+        background-color: transparent;
+        color: #00FF88 !important;
+        padding: 5px 20px;
+    }
+    
+    /* Upload icon (cloud icon) color */
+    section[data-testid="stFileUploaderDropzone"] svg {
+        fill: #00FF88 !important;
+        stroke: #00FF88 !important;
     }
 
+    /* Hover Effect */
     section[data-testid="stFileUploaderDropzone"]:hover {
-        background-color: rgba(0, 0, 0, 0.8) !important;
-        border-color: #00ff88;
+        background-color: rgba(0, 50, 20, 0.9) !important;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
     }
 
     /* TEXT INSTRUCTION */
@@ -97,7 +104,6 @@ st.markdown("""
         margin-top: 10px;
         margin-bottom: 10px;
         font-family: 'Orbitron', sans-serif;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
     }
 
     /* MAIN BUTTONS */
@@ -145,7 +151,7 @@ def load_classifier():
 with st.spinner("🔄 SYSTEM INITIALIZING..."):
     classifier = load_classifier()
 
-# --- 5. LOGIC & DISPLAY ---
+# --- 5. LOGIC ---
 if 'scanned' not in st.session_state:
     st.session_state.scanned = False
 if 'final_img' not in st.session_state:
@@ -163,12 +169,8 @@ uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    
-    # PREVIEW
     if not st.session_state.scanned:
         st.image(image, caption="Uploaded File (Ready to Scan)", use_column_width=True)
-
-    # SCAN BUTTON
     if st.button("ACTIVATE SCAN"):
         with st.spinner("⚡ PROCESSING DATA MATRIX..."):
             results = classifier(image)
@@ -177,21 +179,17 @@ if uploaded_file is not None:
                 if item['label'] == 'nsfw':
                     nsfw_score = item['score']
                     break
-            
-            # LOGIC
             if nsfw_score > 0.2:
                 st.session_state.status = "UNSAFE"
                 st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
             else:
                 st.session_state.status = "SAFE"
                 st.session_state.final_img = image
-            
             st.session_state.scanned = True
             st.rerun()
 
 # --- 6. RESULT ---
 if st.session_state.scanned:
-    
     if st.session_state.status == "UNSAFE":
         st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
@@ -199,7 +197,6 @@ if st.session_state.scanned:
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
     
-    # RESET
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
