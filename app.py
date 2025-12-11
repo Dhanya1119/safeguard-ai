@@ -5,7 +5,7 @@ from PIL import Image, ImageFilter
 # --- 1. PAGE SETUP ---
 st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="centered")
 
-# --- 2. ADVANCED MOBILE RESPONSIVE CSS ---
+# --- 2. ADVANCED CSS (VISIBILITY FIXED) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
@@ -18,7 +18,7 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
 
-    /* --- PC / LAPTOP STYLES (Default) --- */
+    /* --- PC STYLES --- */
     .logo-box {
         display: flex;
         align-items: center;
@@ -41,7 +41,7 @@ st.markdown("""
     .logo-text {
         font-family: 'Orbitron', sans-serif;
         font-weight: 900;
-        font-size: 45px; /* Default Size for PC */
+        font-size: 45px;
         text-transform: uppercase;
         background: linear-gradient(to right, #00c6ff, #0072ff, #00ff88);
         -webkit-background-clip: text;
@@ -56,62 +56,58 @@ st.markdown("""
         font-family: 'Orbitron';
     }
 
-    /* --- MOBILE STYLES (Screen chinnaga unte idi apply avuthundi) --- */
+    /* --- MOBILE RESPONSIVENESS FIX --- */
     @media only screen and (max-width: 600px) {
-        .logo-box {
-            flex-direction: column; /* Stack vertically on phone */
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .shield-icon {
-            font-size: 40px; /* Reduce Icon Size */
-            margin-right: 0;
-            margin-bottom: 5px;
-        }
-        .logo-text {
-            font-size: 28px !important; /* Reduce Text Size significantly */
-            text-align: center;
-        }
-        .logo-sub {
-            text-align: center;
-            font-size: 10px;
-        }
+        .logo-box { flex-direction: column; padding: 15px; }
+        .shield-icon { font-size: 40px; margin-right: 0; margin-bottom: 5px; }
+        .logo-text { font-size: 28px !important; text-align: center; }
+        .logo-sub { text-align: center; font-size: 10px; }
     }
 
-    /* TEXT HIGHLIGHT (Visible on both) */
+    /* --- UPLOAD BOX VISIBILITY FIX (CRITICAL) --- */
+    
+    /* 1. Make the Dropzone Darker so text pops */
+    div[data-testid="stFileUploader"] {
+        background-color: rgba(0, 0, 0, 0.4) !important; /* Semi-transparent Black */
+        border: 2px dashed #00c6ff;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    /* 2. Force ALL text inside Uploader to be BRIGHT CYAN/WHITE */
+    div[data-testid="stFileUploader"] label,
+    div[data-testid="stFileUploader"] span,
+    div[data-testid="stFileUploader"] small,
+    div[data-testid="stFileUploader"] button {
+        color: #E0F7FA !important; /* Very bright cyan-white */
+        font-weight: bold !important;
+    }
+
+    /* 3. Style the Browse Button specifically */
+    section[data-testid="stFileUploaderDropzone"] button {
+        background-color: rgba(0, 198, 255, 0.2);
+        border: 1px solid #00c6ff;
+        color: white !important;
+    }
+
+    div[data-testid="stFileUploader"]:hover {
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        border-color: #00ff88;
+    }
+
+    /* TEXT INSTRUCTION */
     .instruction-text {
         text-align: center;
         font-size: 20px;
         font-weight: 700;
-        color: #00FFFF !important; /* Force Bright Cyan */
+        color: #00FFFF !important;
         margin-top: 10px;
         margin-bottom: 10px;
-        letter-spacing: 1px;
         font-family: 'Orbitron', sans-serif;
     }
 
-    /* UPLOAD BOX FIX (To make text visible) */
-    div[data-testid="stFileUploader"] {
-        background-color: rgba(0, 0, 0, 0.3); /* Darker transparent background */
-        border: 2px dashed #00c6ff;
-        border-radius: 15px;
-        padding: 20px;
-        text-align: center;
-    }
-    
-    /* Ensuring inner text is WHITE */
-    div[data-testid="stFileUploader"] label, 
-    div[data-testid="stFileUploader"] span, 
-    div[data-testid="stFileUploader"] div {
-        color: white !important; /* Force text color to white */
-    }
-
-    div[data-testid="stFileUploader"]:hover {
-        background-color: rgba(0, 198, 255, 0.1);
-        border-color: #00ff88;
-    }
-
-    /* BUTTONS */
+    /* MAIN BUTTONS */
     .stButton>button {
         width: 100%;
         font-family: 'Orbitron', sans-serif;
@@ -131,33 +127,13 @@ st.markdown("""
         color: white;
     }
 
-    /* RESULTS */
-    .status-safe {
-        border: 2px solid #00ff88;
-        background: rgba(0, 255, 136, 0.1);
-        color: #00ff88;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-        font-family: 'Orbitron', sans-serif;
-        font-size: 22px;
-        box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-    }
-    .status-unsafe {
-        border: 2px solid #ff4b4b;
-        background: rgba(255, 75, 75, 0.1);
-        color: #ff4b4b;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-        font-family: 'Orbitron', sans-serif;
-        font-size: 22px;
-        box-shadow: 0 0 15px rgba(255, 75, 75, 0.2);
-    }
+    /* STATUS CARDS */
+    .status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron', font-size: 22px; }
+    .status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron', font-size: 22px; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER (Responsive HTML) ---
+# --- 3. HEADER ---
 st.markdown("""
     <div class="logo-box">
         <span class="shield-icon">🛡️</span>
@@ -183,11 +159,10 @@ if 'final_img' not in st.session_state:
     st.session_state.final_img = None
 if 'status' not in st.session_state:
     st.session_state.status = ""
-# Trick: Key for Uploader Reset
 if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = str(0)
 
-# Text Instruction
+# Instruction Text
 st.markdown('<p class="instruction-text">✨ Check if your Image is Safe or Not ✨</p>', unsafe_allow_html=True)
 
 # UPLOAD BOX
@@ -196,11 +171,9 @@ uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     
-    # PREVIEW (If not scanned)
     if not st.session_state.scanned:
         st.image(image, caption="Uploaded File (Ready to Scan)", use_column_width=True)
 
-    # ACTION BUTTON
     if st.button("ACTIVATE SCAN"):
         with st.spinner("⚡ PROCESSING DATA MATRIX..."):
             results = classifier(image)
@@ -210,7 +183,6 @@ if uploaded_file is not None:
                     nsfw_score = item['score']
                     break
             
-            # STRICT LOGIC
             if nsfw_score > 0.2:
                 st.session_state.status = "UNSAFE"
                 st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
@@ -223,16 +195,13 @@ if uploaded_file is not None:
 
 # --- 6. RESULT ---
 if st.session_state.scanned:
-    
     if st.session_state.status == "UNSAFE":
         st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
-        
     elif st.session_state.status == "SAFE":
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
     
-    # RESET
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
