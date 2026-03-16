@@ -7,150 +7,148 @@ st.set_page_config(page_title="SafeGuard AI", page_icon="🛡️", layout="cente
 
 # --- 2. ADVANCED CSS (MOBILE & PC FIXED) ---
 st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
-    /* BACKGROUND */
-    .stApp {
-        background: radial-gradient(circle at 50% 10%, #002B5B 0%, #021a35 40%, #000000 100%);
-        color: white;
-        font-family: 'Roboto', sans-serif;
-    }
+/* BACKGROUND */
+.stApp {
+    background: radial-gradient(circle at 50% 10%, #002B5B 0%, #021a35 40%, #000000 100%);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
 
-    /* HEADER & LOGO - DEFAULT (LAPTOP) */
+/* HEADER & LOGO - DEFAULT (LAPTOP) */
+.logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 198, 255, 0.1));
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    backdrop-filter: blur(5px);
+}
+.shield-icon { font-size: 60px; margin-right: 15px; text-shadow: 0 0 20px #00ff88; }
+.logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 45px;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #00c6ff, #0072ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.5));
+}
+.logo-sub {
+    font-size: 12px;
+    color: #aaa;
+    letter-spacing: 2px;
+    font-family: 'Orbitron';
+    text-transform: uppercase;
+}
+
+/* --- MOBILE RESPONSIVE FIX (THE IMPORTANT PART) --- */
+@media only screen and (max-width: 600px) {
     .logo-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 198, 255, 0.1));
-        padding: 20px;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 255, 136, 0.3);
-        box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
-        backdrop-filter: blur(5px);
+        flex-direction: column; /* Phone lo Kindaki ravali */
+        padding: 10px;
+        margin-bottom: 15px;
     }
-    .shield-icon { font-size: 60px; margin-right: 15px; text-shadow: 0 0 20px #00ff88; }
+    .shield-icon {
+        font-size: 40px !important; /* Reduce Icon Size */
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
     .logo-text {
-        font-family: 'Orbitron', sans-serif;
-        font-weight: 900;
-        font-size: 45px;
-        text-transform: uppercase;
-        background: linear-gradient(to right, #00c6ff, #0072ff, #00ff88);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.5));
+        font-size: 24px !important; /* Force Smaller Text on Phone */
+        text-align: center;
+        line-height: 1.2; /* Better spacing */
     }
     .logo-sub {
-        font-size: 12px;
-        color: #aaa;
-        letter-spacing: 2px;
-        font-family: 'Orbitron';
-        text-transform: uppercase;
-    }
-
-    /* --- MOBILE RESPONSIVE FIX (THE IMPORTANT PART) --- */
-    @media only screen and (max-width: 600px) {
-        .logo-box {
-            flex-direction: column; /* Phone lo Kindaki ravali */
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-        .shield-icon {
-            font-size: 40px !important; /* Reduce Icon Size */
-            margin-right: 0;
-            margin-bottom: 5px;
-        }
-        .logo-text {
-            font-size: 24px !important; /* Force Smaller Text on Phone */
-            text-align: center;
-            line-height: 1.2; /* Better spacing */
-        }
-        .logo-sub {
-            text-align: center;
-            font-size: 8px !important; /* Smaller Subtitle */
-            letter-spacing: 1px;
-        }
-        /* Mobile Upload Box Adjustments */
-        div[data-testid="stFileUploader"] {
-            padding: 15px !important;
-        }
-        .instruction-text {
-            font-size: 16px !important;
-        }
-    }
-
-    /* --- UPLOAD BOX GREEN GLOW (KEEPING IT) --- */
-    [data-testid="stFileUploaderDropzone"] {
-        background-color: rgba(0, 0, 0, 0.8) !important;
-        border: 2px dashed #00ff88 !important;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-    }
-    
-    /* Force White Text inside Upload Box */
-    [data-testid="stFileUploaderDropzone"] div,
-    [data-testid="stFileUploaderDropzone"] span,
-    [data-testid="stFileUploaderDropzone"] small,
-    [data-testid="stFileUploaderDropzone"] label {
-        color: #FFFFFF !important;
-    }
-    
-    [data-testid="stFileUploaderDropzone"] button {
-        background-color: rgba(0, 255, 136, 0.1) !important;
-        border: 1px solid #00ff88 !important;
-        color: #FFFFFF !important;
-    }
-
-    /* INSTRUCTION TEXT */
-    .instruction-text {
         text-align: center;
-        font-size: 20px;
-        font-weight: 700;
-        color: #00FFFF !important;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        font-family: 'Orbitron', sans-serif;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        font-size: 8px !important; /* Smaller Subtitle */
+        letter-spacing: 1px;
     }
+    /* Mobile Upload Box Adjustments */
+    div[data-testid="stFileUploader"] {
+        padding: 15px !important;
+    }
+    .instruction-text {
+        font-size: 16px !important;
+    }
+}
 
-    /* BUTTONS */
-    .stButton>button {
-        width: 100%;
-        font-family: 'Orbitron', sans-serif;
-        background: linear-gradient(90deg, #00c6ff, #00ff88);
-        border: none;
-        color: #002333;
-        font-weight: 900;
-        font-size: 20px;
-        padding: 16px;
-        border-radius: 8px;
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-        transition: 0.3s;
-    }
-    .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 40px rgba(0, 198, 255, 0.8);
-        color: white;
-    }
+/* --- UPLOAD BOX GREEN GLOW --- */
+[data-testid="stFileUploaderDropzone"] {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    border: 2px dashed #00ff88 !important;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
 
-    /* RESULT STATUS */
-    .status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
-    .status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; }
-    </style>
+/* Force White Text inside Upload Box */
+[data-testid="stFileUploaderDropzone"] div,[data-testid="stFileUploaderDropzone"] span,
+[data-testid="stFileUploaderDropzone"] small,[data-testid="stFileUploaderDropzone"] label {
+    color: #FFFFFF !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button {
+    background-color: rgba(0, 255, 136, 0.1) !important;
+    border: 1px solid #00ff88 !important;
+    color: #FFFFFF !important;
+}
+
+/* INSTRUCTION TEXT */
+.instruction-text {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #00FFFF !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+
+/* BUTTONS */
+.stButton>button {
+    width: 100%;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(90deg, #00c6ff, #00ff88);
+    border: none;
+    color: #002333;
+    font-weight: 900;
+    font-size: 20px;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    transition: 0.3s;
+}
+.stButton>button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(0, 198, 255, 0.8);
+    color: white;
+}
+
+/* RESULT STATUS */
+.status-safe { border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; margin-bottom:15px; }
+.status-unsafe { border: 2px solid #ff4b4b; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; padding: 15px; border-radius: 10px; text-align: center; font-family: 'Orbitron'; font-size: 22px; margin-bottom:15px; }
+</style>
 """, unsafe_allow_html=True)
 
 # --- 3. HEADER (FLEXIBLE) ---
 st.markdown("""
-    <div class="logo-box">
-        <span class="shield-icon">🛡️</span>
-        <div style="display:flex; flex-direction:column;">
-            <span class="logo-text">SAFEGUARD AI</span>
-            <span class="logo-sub">INTELLIGENT PROTECTION PROTOCOL</span>
-        </div>
-    </div>
+<div class="logo-box">
+<span class="shield-icon">🛡️</span>
+<div style="display:flex; flex-direction:column;">
+<span class="logo-text">SAFEGUARD AI</span>
+<span class="logo-sub">INTELLIGENT PROTECTION PROTOCOL</span>
+</div>
+</div>
 """, unsafe_allow_html=True)
 
 # --- 4. LOAD AI ---
@@ -161,7 +159,7 @@ def load_classifier():
 with st.spinner("🔄 SYSTEM INITIALIZING..."):
     classifier = load_classifier()
 
-# --- 5. LOGIC (INSTANT SCAN) ---
+# --- 5. LOGIC & STATE SETUP ---
 if 'scanned' not in st.session_state:
     st.session_state.scanned = False
 if 'final_img' not in st.session_state:
@@ -169,25 +167,33 @@ if 'final_img' not in st.session_state:
 if 'status' not in st.session_state:
     st.session_state.status = ""
 if 'uploader_key' not in st.session_state:
-    st.session_state.uploader_key = str(0)
+    st.session_state.uploader_key = "0"
 
 st.markdown('<p class="instruction-text"> Check if your Image is Safe or Not </p>', unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("", type=["jpg", "png", "jpeg"], key=st.session_state.uploader_key)
+# NOTE: Fixed the empty label warning by giving it a name but hiding it.
+uploaded_file = st.file_uploader(
+    "Upload Image", 
+    type=["jpg", "png", "jpeg"], 
+    key=st.session_state.uploader_key, 
+    label_visibility="hidden"
+)
 
-if uploaded_file is not None:
-    # Auto-run when file is uploaded
+# --- THE FIX: ONLY SCAN IF WE HAVEN'T SCANNED IT YET ---
+if uploaded_file is not None and not st.session_state.scanned:
     with st.spinner("⚡ AUTO-SCANNING..."):
         image = Image.open(uploaded_file)
         results = classifier(image)
+        
         nsfw_score = 0.0
         for item in results:
             if item['label'] == 'nsfw':
                 nsfw_score = item['score']
                 break
-        
+
         if nsfw_score > 0.2:
             st.session_state.status = "UNSAFE"
+            # Blurring sensitive images
             st.session_state.final_img = image.filter(ImageFilter.GaussianBlur(radius=60))
         else:
             st.session_state.status = "SAFE"
@@ -196,9 +202,8 @@ if uploaded_file is not None:
         st.session_state.scanned = True
         st.rerun()
 
-# --- 6. RESULT ---
+# --- 6. RESULT UI ---
 if st.session_state.scanned:
-    
     if st.session_state.status == "UNSAFE":
         st.markdown('<div class="status-unsafe">🚫 BLOCKED (STRICT MODE)</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Content Blurred for Safety", use_column_width=True)
@@ -206,11 +211,12 @@ if st.session_state.scanned:
     elif st.session_state.status == "SAFE":
         st.markdown('<div class="status-safe">✅ SAFE TO VIEW</div>', unsafe_allow_html=True)
         st.image(st.session_state.final_img, caption="Verified Safe Content", use_column_width=True)
-    
-    # RESET
+
+    # RESET BUTTON
     if st.button("SCAN NEW FILE"):
         st.session_state.scanned = False
         st.session_state.final_img = None
         st.session_state.status = ""
+        # Increment uploader key to instantly reset the file uploader UI
         st.session_state.uploader_key = str(int(st.session_state.uploader_key) + 1)
         st.rerun()
